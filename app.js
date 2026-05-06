@@ -4,14 +4,8 @@ JSON.parse(localStorage.getItem("schedules"))
 
 function addSchedule(){
 
-  const date =
-  document.getElementById("date").value;
-
-  const memo =
-  document.getElementById("memo").value;
-
-  const pay =
-  document.getElementById("pay").value;
+  const date = document.getElementById("date").value;
+  const memo = document.getElementById("memo").value.trim();
 
   if(!date || !memo){
     alert("날짜와 일정을 입력해주세요");
@@ -19,10 +13,10 @@ function addSchedule(){
   }
 
   schedules.push({
-    id:Date.now(),
+    id: Date.now(),
     date,
     memo,
-    pay
+    pay: ""
   });
 
   schedules.sort((a,b)=>
@@ -31,14 +25,73 @@ function addSchedule(){
 
   saveData();
 
-  document.getElementById("memo").value="";
-  document.getElementById("pay").value="";
+  document.getElementById("memo").value = "";
 }
 
 function deleteSchedule(id){
 
+  if(!confirm("이 일정을 삭제할까요?")){
+    return;
+  }
+
   schedules =
-  schedules.filter(v=>v.id!==id);
+  schedules.filter(item => item.id !== id);
+
+  saveData();
+}
+
+function addPay(id){
+
+  const item =
+  schedules.find(item => item.id === id);
+
+  const currentPay = item.pay || "";
+
+  const newPay =
+  prompt("일당을 입력하세요. 예: 150000", currentPay);
+
+  if(newPay === null){
+    return;
+  }
+
+  item.pay = newPay.replace(/,/g, "").trim();
+
+  saveData();
+}
+
+function editSchedule(id){
+
+  const item =
+  schedules.find(item => item.id === id);
+
+  const newDate =
+  prompt("날짜를 수정하세요. 예: 2026-05-07", item.date);
+
+  if(newDate === null){
+    return;
+  }
+
+  const newMemo =
+  prompt("일정을 수정하세요.", item.memo);
+
+  if(newMemo === null){
+    return;
+  }
+
+  const newPay =
+  prompt("일당을 수정하세요. 없으면 비워두세요.", item.pay || "");
+
+  if(newPay === null){
+    return;
+  }
+
+  item.date = newDate.trim();
+  item.memo = newMemo.trim();
+  item.pay = newPay.replace(/,/g, "").trim();
+
+  schedules.sort((a,b)=>
+    new Date(a.date) - new Date(b.date)
+  );
 
   saveData();
 }
@@ -70,7 +123,14 @@ function formatDate(dateText){
 
 function formatPay(pay){
   if(!pay) return "";
-  return Number(pay).toLocaleString() + "원";
+
+  const numberPay = Number(pay);
+
+  if(isNaN(numberPay)){
+    return "";
+  }
+
+  return numberPay.toLocaleString() + "원";
 }
 
 function render(){
@@ -78,7 +138,7 @@ function render(){
   const list =
   document.getElementById("schedule-list");
 
-  list.innerHTML="";
+  list.innerHTML = "";
 
   schedules.forEach(item=>{
 
@@ -99,12 +159,19 @@ function render(){
           ${item.memo}
         </div>
 
-        <button
-          onclick="deleteSchedule(${item.id})"
-          style="margin-top:12px;"
-        >
-          삭제
-        </button>
+        <div class="button-row">
+          <button onclick="editSchedule(${item.id})">
+            수정
+          </button>
+
+          <button onclick="addPay(${item.id})">
+            일당
+          </button>
+
+          <button onclick="deleteSchedule(${item.id})">
+            삭제
+          </button>
+        </div>
 
       </div>
     `;
