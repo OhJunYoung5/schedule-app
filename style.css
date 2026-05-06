@@ -11,6 +11,8 @@ body{
   max-width:500px;
   margin:auto;
   padding:20px;
+
+  overflow:hidden;
 }
 
 h1{
@@ -63,11 +65,33 @@ button{
   margin-bottom:8px;
 }
 
- input[type="date"]{
-  appearance:none;
-  -webkit-appearance:none;
+input[type="date"]{
   width:100%;
   max-width:100%;
+  min-width:0;
+
   display:block;
+
+  padding:12px;
+
+  font-size:16px;
+
+  border:1px solid #ccc;
+  border-radius:10px;
+
+  background:#f4f4f4;
+
   overflow:hidden;
+
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+input[type="date"]::-webkit-datetime-edit{
+  padding:0;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+  margin:0;
+  padding:0;
 }
