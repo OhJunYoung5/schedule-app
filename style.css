@@ -95,3 +95,23 @@ input[type="date"]::-webkit-calendar-picker-indicator{
   margin:0;
   padding:0;
 }
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.pay{
+  font-size:16px;
+  font-weight:bold;
+  color:#007aff;
+  white-space:nowrap;
+}
+
+.memo{
+  margin-top:10px;
+  font-size:18px;
+  line-height:1.5;
+}
