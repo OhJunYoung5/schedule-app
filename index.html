@@ -1,57 +1,27 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>오준영 전용 스케줄 메모</title>
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  />
-
-  <link
-    rel="manifest"
-    href="manifest.json"
-  />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
-
 <body>
-
   <div class="app">
-
     <h1>오준영 전용 스케줄 메모</h1>
 
     <div class="form">
+      <input type="date" id="date" />
 
-      <input
-        type="date"
-        id="date"
-      />
+      <textarea id="memo" placeholder="일정을 입력하세요"></textarea>
 
-      <textarea
-        id="memo"
-        placeholder="일정을 입력하세요"
-      ></textarea>
-
-      <button onclick="addSchedule()">
-        일정 추가
-      </button>
-
+      <button id="addBtn" type="button">일정 추가</button>
     </div>
 
     <div id="schedule-list"></div>
-
   </div>
 
   <script src="app.js"></script>
-
 </body>
-
 </html>

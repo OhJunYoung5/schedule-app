@@ -1,6 +1,6 @@
 {
-  "name": "스케줄 앱",
-  "short_name": "오준영 전용 스케줄",
+  "name": "오준영 전용 스케줄 메모",
+  "short_name": "스케줄",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

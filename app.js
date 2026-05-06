@@ -1,9 +1,14 @@
-let schedules =
-JSON.parse(localStorage.getItem("schedules")) || [];
+let schedules = JSON.parse(localStorage.getItem("schedules") || "[]");
+
+const dateInput = document.getElementById("date");
+const memoInput = document.getElementById("memo");
+const addBtn = document.getElementById("addBtn");
+
+addBtn.addEventListener("click", addSchedule);
 
 function addSchedule(){
-  const date = document.getElementById("date").value;
-  const memo = document.getElementById("memo").value.trim();
+  const date = dateInput.value;
+  const memo = memoInput.value.trim();
 
   if(!date || !memo){
     alert("날짜와 일정을 입력해주세요");
@@ -17,68 +22,57 @@ function addSchedule(){
     pay: ""
   });
 
-  schedules.sort((a,b)=>
-    new Date(a.date) - new Date(b.date)
-  );
+  sortSchedules();
+  saveSchedules();
 
-  saveData();
-
-  document.getElementById("memo").value = "";
+  memoInput.value = "";
 }
 
 function deleteSchedule(id){
-  if(!confirm("이 일정을 삭제할까요?")){
-    return;
-  }
+  if(!confirm("이 일정을 삭제할까요?")) return;
 
   schedules = schedules.filter(item => item.id !== id);
-
-  saveData();
+  saveSchedules();
 }
 
 function addPay(id){
   const item = schedules.find(item => item.id === id);
+  if(!item) return;
 
-  const newPay =
-  prompt("일당을 입력하세요. 예: 150000", item.pay || "");
+  const pay = prompt("일당을 입력하세요. 예: 150000", item.pay || "");
+  if(pay === null) return;
 
-  if(newPay === null){
-    return;
-  }
-
-  item.pay = newPay.replace(/,/g, "").trim();
-
-  saveData();
+  item.pay = pay.replace(/,/g, "").trim();
+  saveSchedules();
 }
 
 function editSchedule(id){
   const item = schedules.find(item => item.id === id);
-  const card = document.getElementById(`card-${id}`);
+  if(!item) return;
+
+  const card = document.getElementById("card-" + id);
+  if(!card) return;
 
   card.innerHTML = `
-    <input
-      type="date"
-      id="edit-date-${id}"
-      value="${item.date}"
-    />
+    <div class="edit-box">
+      <input type="date" id="edit-date-${id}" value="${escapeHtml(item.date)}">
 
-    <textarea id="edit-memo-${id}">${item.memo}</textarea>
+      <textarea id="edit-memo-${id}" placeholder="일정을 입력하세요">${escapeHtml(item.memo)}</textarea>
 
-    <div class="button-row">
-      <button onclick="saveEdit(${id})">저장</button>
-      <button onclick="render()">취소</button>
+      <div class="button-row">
+        <button type="button" onclick="saveEdit(${id})">저장</button>
+        <button type="button" onclick="render()">취소</button>
+      </div>
     </div>
   `;
 }
 
 function saveEdit(id){
   const item = schedules.find(item => item.id === id);
+  if(!item) return;
 
-  const newDate =
-  document.getElementById(`edit-date-${id}`).value;
-
-  const newMemo =
-  document.getElementById(`edit-memo-${id}`).value.trim();
+  const newDate = document.getElementById("edit-date-" + id).value;
+  const newMemo = document.getElementById("edit-memo-" + id).value.trim();
 
   if(!newDate || !newMemo){
     alert("날짜와 일정을 입력해주세요");
@@ -88,30 +82,27 @@ function saveEdit(id){
   item.date = newDate;
   item.memo = newMemo;
 
-  schedules.sort((a,b)=>
-    new Date(a.date) - new Date(b.date)
-  );
-
-  saveData();
+  sortSchedules();
+  saveSchedules();
 }
 
-function saveData(){
-  localStorage.setItem(
-    "schedules",
-    JSON.stringify(schedules)
-  );
+function sortSchedules(){
+  schedules.sort((a,b) => new Date(a.date) - new Date(b.date));
+}
 
+function saveSchedules(){
+  localStorage.setItem("schedules", JSON.stringify(schedules));
   render();
 }
 
 function getDayName(dateText){
   const days = ["일","월","화","수","목","금","토"];
-  const date = new Date(dateText);
+  const date = new Date(dateText + "T00:00:00");
   return days[date.getDay()];
 }
 
 function formatDate(dateText){
-  const date = new Date(dateText);
+  const date = new Date(dateText + "T00:00:00");
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const week = getDayName(dateText);
@@ -123,51 +114,39 @@ function formatPay(pay){
   if(!pay) return "";
 
   const numberPay = Number(pay);
-
-  if(isNaN(numberPay)){
-    return "";
-  }
+  if(isNaN(numberPay)) return "";
 
   return numberPay.toLocaleString() + "원";
 }
 
+function escapeHtml(text){
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function render(){
   const list = document.getElementById("schedule-list");
-
   list.innerHTML = "";
 
-  schedules.forEach(item=>{
+  schedules.forEach(item => {
     list.innerHTML += `
       <div class="card" id="card-${item.id}">
-
         <div class="card-top">
-          <div class="date">
-            ${formatDate(item.date)}
-          </div>
-
-          <div class="pay">
-            ${formatPay(item.pay)}
-          </div>
+          <div class="date">${formatDate(item.date)}</div>
+          <div class="pay">${formatPay(item.pay)}</div>
         </div>
 
-        <div class="memo">
-          ${item.memo}
-        </div>
+        <div class="memo">${escapeHtml(item.memo)}</div>
 
         <div class="button-row">
-          <button onclick="editSchedule(${item.id})">
-            수정
-          </button>
-
-          <button onclick="addPay(${item.id})">
-            일당
-          </button>
-
-          <button onclick="deleteSchedule(${item.id})">
-            삭제
-          </button>
+          <button type="button" onclick="editSchedule(${item.id})">수정</button>
+          <button type="button" onclick="addPay(${item.id})">일당</button>
+          <button type="button" onclick="deleteSchedule(${item.id})">삭제</button>
         </div>
-
       </div>
     `;
   });
