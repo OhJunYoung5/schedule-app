@@ -115,9 +115,16 @@ button{
 
 .memo{
   margin-top:14px;
+
   font-size:20px;
   line-height:1.5;
+
   white-space:pre-wrap;
+
+  display:flex;
+  align-items:flex-start;
+
+  min-height:auto;
 }
 
 .button-row{
