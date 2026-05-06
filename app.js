@@ -2,9 +2,9 @@ let schedules = JSON.parse(localStorage.getItem("schedules") || "[]");
 
 const dateInput = document.getElementById("date");
 const memoInput = document.getElementById("memo");
-const addBtn = document.getElementById("addBtn");
-
-addBtn.addEventListener("click", addSchedule);
+<button onclick="addSchedule()" type="button">
+  일정 추가
+</button>
 
 function addSchedule(){
   const date = dateInput.value;
