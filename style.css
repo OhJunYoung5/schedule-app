@@ -11,7 +11,11 @@ body{
 .app{
   max-width:500px;
   margin:auto;
+
   padding:20px;
+
+  padding-bottom:calc(120px + env(safe-area-inset-bottom));
+
   overflow:hidden;
 }
 
