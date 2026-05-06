@@ -11,7 +11,11 @@ body{
 .app{
   max-width:500px;
   margin:auto;
+
   padding:20px;
+
+  padding-bottom:calc(120px + env(safe-area-inset-bottom));
+
   overflow:hidden;
 }
 
@@ -35,11 +39,13 @@ input,
 textarea,
 button{
   width:100%;
-  box-sizing:border-box;
   margin-top:10px;
   padding:14px;
+
   border-radius:12px;
+
   border:1px solid #ccc;
+
   font-size:18px;
 }
 
@@ -47,12 +53,13 @@ input[type="date"]{
   width:100%;
   max-width:100%;
   min-width:0;
+
   display:block;
-  padding:14px;
-  font-size:18px;
+
   text-align:center;
+
   background:#f4f4f4;
-  overflow:hidden;
+
   -webkit-appearance:none;
   appearance:none;
 }
@@ -125,10 +132,6 @@ button{
   margin-top:0;
   padding:12px 0;
   font-size:16px;
-}
-
-.edit-box{
-  margin-top:0;
 }
 
 .edit-box textarea{
