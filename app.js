@@ -10,6 +10,9 @@ function addSchedule(){
   const memo =
   document.getElementById("memo").value;
 
+  const pay =
+  document.getElementById("pay").value;
+
   if(!date || !memo){
     alert("날짜와 일정을 입력해주세요");
     return;
@@ -18,7 +21,8 @@ function addSchedule(){
   schedules.push({
     id:Date.now(),
     date,
-    memo
+    memo,
+    pay
   });
 
   schedules.sort((a,b)=>
@@ -28,6 +32,7 @@ function addSchedule(){
   saveData();
 
   document.getElementById("memo").value="";
+  document.getElementById("pay").value="";
 }
 
 function deleteSchedule(id){
@@ -48,6 +53,26 @@ function saveData(){
   render();
 }
 
+function getDayName(dateText){
+  const days = ["일","월","화","수","목","금","토"];
+  const date = new Date(dateText);
+  return days[date.getDay()];
+}
+
+function formatDate(dateText){
+  const date = new Date(dateText);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const week = getDayName(dateText);
+
+  return `${month}월 ${day}일(${week})`;
+}
+
+function formatPay(pay){
+  if(!pay) return "";
+  return Number(pay).toLocaleString() + "원";
+}
+
 function render(){
 
   const list =
@@ -60,11 +85,17 @@ function render(){
     list.innerHTML += `
       <div class="card">
 
-        <div class="date">
-          ${item.date}
+        <div class="card-top">
+          <div class="date">
+            ${formatDate(item.date)}
+          </div>
+
+          <div class="pay">
+            ${formatPay(item.pay)}
+          </div>
         </div>
 
-        <div>
+        <div class="memo">
           ${item.memo}
         </div>
 
