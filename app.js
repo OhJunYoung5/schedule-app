@@ -1,9 +1,7 @@
 let schedules =
-JSON.parse(localStorage.getItem("schedules"))
-|| [];
+JSON.parse(localStorage.getItem("schedules")) || [];
 
 function addSchedule(){
-
   const date = document.getElementById("date").value;
   const memo = document.getElementById("memo").value.trim();
 
@@ -14,8 +12,8 @@ function addSchedule(){
 
   schedules.push({
     id: Date.now(),
-    date,
-    memo,
+    date: date,
+    memo: memo,
     pay: ""
   });
 
@@ -29,26 +27,20 @@ function addSchedule(){
 }
 
 function deleteSchedule(id){
-
   if(!confirm("이 일정을 삭제할까요?")){
     return;
   }
 
-  schedules =
-  schedules.filter(item => item.id !== id);
+  schedules = schedules.filter(item => item.id !== id);
 
   saveData();
 }
 
 function addPay(id){
-
-  const item =
-  schedules.find(item => item.id === id);
-
-  const currentPay = item.pay || "";
+  const item = schedules.find(item => item.id === id);
 
   const newPay =
-  prompt("일당을 입력하세요. 예: 150000", currentPay);
+  prompt("일당을 입력하세요. 예: 150000", item.pay || "");
 
   if(newPay === null){
     return;
@@ -61,7 +53,6 @@ function addPay(id){
 
 function editSchedule(id){
   const item = schedules.find(item => item.id === id);
-
   const card = document.getElementById(`card-${id}`);
 
   card.innerHTML = `
@@ -74,13 +65,8 @@ function editSchedule(id){
     <textarea id="edit-memo-${id}">${item.memo}</textarea>
 
     <div class="button-row">
-      <button onclick="saveEdit(${id})">
-        저장
-      </button>
-
-      <button onclick="render()">
-        취소
-      </button>
+      <button onclick="saveEdit(${id})">저장</button>
+      <button onclick="render()">취소</button>
     </div>
   `;
 }
@@ -109,19 +95,7 @@ function saveEdit(id){
   saveData();
 }
 
-  item.date = newDate.trim();
-  item.memo = newMemo.trim();
-  item.pay = newPay.replace(/,/g, "").trim();
-
-  schedules.sort((a,b)=>
-    new Date(a.date) - new Date(b.date)
-  );
-
-  saveData();
-}
-
 function saveData(){
-
   localStorage.setItem(
     "schedules",
     JSON.stringify(schedules)
@@ -158,14 +132,11 @@ function formatPay(pay){
 }
 
 function render(){
-
-  const list =
-  document.getElementById("schedule-list");
+  const list = document.getElementById("schedule-list");
 
   list.innerHTML = "";
 
   schedules.forEach(item=>{
-
     list.innerHTML += `
       <div class="card" id="card-${item.id}">
 
