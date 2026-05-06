@@ -60,30 +60,54 @@ function addPay(id){
 }
 
 function editSchedule(id){
+  const item = schedules.find(item => item.id === id);
 
-  const item =
-  schedules.find(item => item.id === id);
+  const card = document.getElementById(`card-${id}`);
+
+  card.innerHTML = `
+    <input
+      type="date"
+      id="edit-date-${id}"
+      value="${item.date}"
+    />
+
+    <textarea id="edit-memo-${id}">${item.memo}</textarea>
+
+    <div class="button-row">
+      <button onclick="saveEdit(${id})">
+        저장
+      </button>
+
+      <button onclick="render()">
+        취소
+      </button>
+    </div>
+  `;
+}
+
+function saveEdit(id){
+  const item = schedules.find(item => item.id === id);
 
   const newDate =
-  prompt("날짜를 수정하세요. 예: 2026-05-07", item.date);
-
-  if(newDate === null){
-    return;
-  }
+  document.getElementById(`edit-date-${id}`).value;
 
   const newMemo =
-  prompt("일정을 수정하세요.", item.memo);
+  document.getElementById(`edit-memo-${id}`).value.trim();
 
-  if(newMemo === null){
+  if(!newDate || !newMemo){
+    alert("날짜와 일정을 입력해주세요");
     return;
   }
 
-  const newPay =
-  prompt("일당을 수정하세요. 없으면 비워두세요.", item.pay || "");
+  item.date = newDate;
+  item.memo = newMemo;
 
-  if(newPay === null){
-    return;
-  }
+  schedules.sort((a,b)=>
+    new Date(a.date) - new Date(b.date)
+  );
+
+  saveData();
+}
 
   item.date = newDate.trim();
   item.memo = newMemo.trim();
@@ -143,7 +167,7 @@ function render(){
   schedules.forEach(item=>{
 
     list.innerHTML += `
-      <div class="card">
+      <div class="card" id="card-${item.id}">
 
         <div class="card-top">
           <div class="date">
