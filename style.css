@@ -115,3 +115,34 @@ input[type="date"]::-webkit-calendar-picker-indicator{
   font-size:18px;
   line-height:1.5;
 }
+
+.button-row{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.button-row button{
+  flex:1;
+  margin-top:0;
+}
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.pay{
+  font-size:18px;
+  font-weight:bold;
+  color:#007aff;
+  white-space:nowrap;
+}
+
+.memo{
+  margin-top:10px;
+  font-size:18px;
+  line-height:1.5;
+}
